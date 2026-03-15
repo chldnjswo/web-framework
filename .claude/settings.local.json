@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(docker exec:*)",
-      "Bash(mvn clean:*)"
+      "Bash(mvn clean:*)",
+      "WebFetch(domain:localhost)",
+      "Bash(curl:*)"
     ]
   }
 }

@@ -21,7 +21,10 @@ import org.thymeleaf.templatemode.TemplateMode;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "kr.ac.hansung.cse.controller")
+@ComponentScan(basePackages = {
+        "kr.ac.hansung.cse.controller",
+        "kr.ac.hansung.cse.exception"  // GlobalExceptionHandler(@ControllerAdvice) 스캔 추가
+})
 public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 
     private ApplicationContext applicationContext;

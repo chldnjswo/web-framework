@@ -103,9 +103,18 @@ public class ProductService {
 
     /**
      * 상품 수정
+     *
+     * 서비스 레이어에서도 가격을 검증합니다.
+     * 웹 레이어(Bean Validation)와 서비스 레이어 양쪽에서 검증하는 이유:
+     *   - 방어적 프로그래밍(Defense in Depth): 웹 계층을 우회하는 API 호출이나
+     *     테스트 코드에서도 비즈니스 규칙이 항상 보장됩니다.
+     *   - 서비스는 "어떤 클라이언트(웹/API/배치 등)가 호출해도" 유효성을 보장해야 합니다.
      */
     @Transactional
     public Product updateProduct(Product product) {
+        if (product.getPrice() != null && product.getPrice().compareTo(java.math.BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("상품 가격은 0 이상이어야 합니다.");
+        }
         return productRepository.update(product);
     }
 

@@ -32,6 +32,8 @@
 </head>
 <body>
 
+    <th:block th:replace="~{fragments/siteInfo :: siteHeader}"></th:block>
+
     <h1>상품 상세 정보</h1>
 
     <a class="back-btn" th:href="@{/products}">← 목록으로 돌아가기</a>
@@ -101,6 +103,8 @@
             <button type="submit" class="btn-delete">삭제</button>
         </form>
     </div>
+
+    <th:block th:replace="~{fragments/siteInfo :: siteFooter}"></th:block>
 
 </body>
 </html>

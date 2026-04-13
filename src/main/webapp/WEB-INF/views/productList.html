@@ -35,6 +35,8 @@
 </head>
 <body>
 
+    <th:block th:replace="~{fragments/siteInfo :: siteHeader}"></th:block>
+
     <h1>상품 목록</h1>
 
     <!--
@@ -119,6 +121,8 @@
             </tr>
         </tbody>
     </table>
+
+    <th:block th:replace="~{fragments/siteInfo :: siteFooter}"></th:block>
 
 </body>
 </html>

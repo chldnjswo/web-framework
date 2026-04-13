@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="siteHeader">
+    <header style="margin-bottom: 24px; padding: 16px 20px; background: #f4f7fb; border: 1px solid #dbe6f3; border-radius: 10px; text-align: left;">
+        <p style="margin: 0; color: #2c3e50; font-weight: 600;">
+            실습 수행 일시:
+            <span th:text="${practicePerformedAt}">2026년 4월 13일 (월) 오후 02:34:17</span>
+            <span> | 학번: 2171158 | 성명: 최원재</span>
+        </p>
+    </header>
+</th:block>
+
+<th:block th:fragment="siteFooter">
+    <footer style="margin-top: 32px; padding: 16px 20px; background: #f8f9fa; border-top: 1px solid #dcdfe3; border-radius: 10px; text-align: left;">
+        <p style="margin: 0; color: #2c3e50; font-weight: 600;">
+            실습 수행 일시:
+            <span th:text="${practicePerformedAt}">2026년 4월 13일 (월) 오후 02:34:17</span>
+            <span> | 학번: 2171158 | 성명: 최원재</span>
+        </p>
+    </footer>
+</th:block>
+</body>
+</html>

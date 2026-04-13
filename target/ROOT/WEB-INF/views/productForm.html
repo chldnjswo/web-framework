@@ -30,6 +30,8 @@
 </head>
 <body>
 
+    <th:block th:replace="~{fragments/siteInfo :: siteHeader}"></th:block>
+
     <h1>새 상품 등록</h1>
 
     <a class="back-btn" th:href="@{/products}">← 목록으로 돌아가기</a>
@@ -135,6 +137,8 @@
         </div>
 
     </form>
+
+    <th:block th:replace="~{fragments/siteInfo :: siteFooter}"></th:block>
 
 </body>
 </html>

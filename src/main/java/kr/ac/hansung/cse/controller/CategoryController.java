@@ -31,9 +31,10 @@ public class CategoryController {
 
     @PostMapping("/create")
     public String createCategory(
-            @Valid @ModelAttribute CategoryForm categoryForm,
+            @Valid @ModelAttribute("categoryForm") CategoryForm categoryForm,
             BindingResult bindingResult,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            Model model){
         if (bindingResult.hasErrors()) return "categoryForm";
         try {
             categoryService.createCategory(categoryForm.getName());

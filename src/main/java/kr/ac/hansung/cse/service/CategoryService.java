@@ -30,10 +30,12 @@ public class CategoryService {
     }
     @Transactional
     public Category createCategory(String name){
-        categoryRepository.findByName(name)
-                .ifPresent(c->{throw new DuplicateCategoryException(name);
+        String normalizedName = name == null ? null : name.trim();
+
+        categoryRepository.findByName(normalizedName)
+                .ifPresent(c->{throw new DuplicateCategoryException(normalizedName);
                 });
-        return categoryRepository.save(new Category(name));
+        return categoryRepository.save(new Category(normalizedName));
 
     }
 }

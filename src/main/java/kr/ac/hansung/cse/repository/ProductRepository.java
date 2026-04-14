@@ -53,6 +53,8 @@ public class ProductRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
+
+
     /**
      * 모든 상품 목록 조회
      *
@@ -67,6 +69,23 @@ public class ProductRepository {
         // LEFT JOIN FETCH: LAZY인 category를 한 번의 쿼리로 함께 로드 (LazyInitializationException 방지)
         TypedQuery<Product> query = entityManager
                 .createQuery("SELECT p FROM Product p LEFT JOIN FETCH p.category ORDER BY p.id ASC", Product.class);
+        return query.getResultList();
+    }
+
+    /**
+     * 상품명 부분 검색
+     *
+     * LOWER()를 사용해 대소문자 차이를 무시하고 LIKE 검색합니다.
+     */
+    public List<Product> findByNameContaining(String name) {
+        TypedQuery<Product> query = entityManager.createQuery(
+                "SELECT p FROM Product p " +
+                "LEFT JOIN FETCH p.category " +
+                "WHERE LOWER(p.name) LIKE LOWER(:name) " +
+                "ORDER BY p.id ASC",
+                Product.class
+        );
+        query.setParameter("name", "%" + name + "%");
         return query.getResultList();
     }
 

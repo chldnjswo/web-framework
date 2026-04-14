@@ -80,6 +80,17 @@ public class ProductService {
     }
 
     /**
+     * 상품명으로 부분 검색
+     * 검색어가 비어 있으면 전체 목록을 반환합니다.
+     */
+    public List<Product> searchProductsByName(String name) {
+        if (name == null || name.isBlank()) {
+            return productRepository.findAll();
+        }
+        return productRepository.findByNameContaining(name.trim());
+    }
+
+    /**
      * ID로 상품 조회
      * Optional을 그대로 반환하여 Controller가 null 처리를 명시적으로 하도록 강제합니다.
      */

@@ -83,5 +83,13 @@ public class ProductRepositoryTest {
         Optional<Product> deleted = productRepository.findById(id);
         assertFalse(deleted.isPresent());
     }
-}
 
+    @Test
+    @DisplayName("Test5: findByNameContaining")
+    public void testFindByNameContaining() {
+        List<Product> products = productRepository.findByNameContaining("Laptop");
+
+        assertFalse(products.isEmpty());
+        assertTrue(products.stream().anyMatch(product -> "Test Laptop".equals(product.getName())));
+    }
+}

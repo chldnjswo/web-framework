@@ -48,9 +48,11 @@ public class ProductController {
     // ─────────────────────────────────────────────────────────────────
 
     @GetMapping
-    public String listProducts(Model model) {
-        List<Product> products = productService.getAllProducts();
+    public String listProducts(@RequestParam(name = "name", required = false) String name,
+                               Model model) {
+        List<Product> products = productService.searchProductsByName(name);
         model.addAttribute("products", products);
+        model.addAttribute("searchName", name == null ? "" : name.trim());
         return "productList";
     }
 

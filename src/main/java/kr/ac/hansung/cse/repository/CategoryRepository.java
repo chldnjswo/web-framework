@@ -31,8 +31,8 @@ public class CategoryRepository {
     public Optional<Category> findByName(String name) {
         List<Category> result = em.createQuery(
                         "SELECT c FROM Category c " +
-                                "WHERE LOWER(TRIM(c.name)) = LOWER(:name)", Category.class)
-                .setParameter("name", name == null ? null : name.trim())
+                                "WHERE LOWER(REPLACE(TRIM(c.name), ' ', '')) = LOWER(:name)", Category.class)
+                .setParameter("name", normalizeName(name))
                 .getResultList();
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
@@ -55,5 +55,9 @@ public class CategoryRepository {
                 .setParameter("id", id)
                 .getResultList();
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+    private String normalizeName(String name) {
+        return name == null ? null : name.replaceAll("\\s+", "");
     }
 }

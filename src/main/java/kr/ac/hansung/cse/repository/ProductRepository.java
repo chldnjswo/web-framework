@@ -90,6 +90,38 @@ public class ProductRepository {
     }
 
     /**
+     * 카테고리 ID로 상품 목록 조회
+     */
+    public List<Product> findByCategoryId(Long categoryId) {
+        TypedQuery<Product> query = entityManager.createQuery(
+                "SELECT p FROM Product p " +
+                "LEFT JOIN FETCH p.category " +
+                "WHERE p.category.id = :categoryId " +
+                "ORDER BY p.id ASC",
+                Product.class
+        );
+        query.setParameter("categoryId", categoryId);
+        return query.getResultList();
+    }
+
+    /**
+     * 상품명 부분 검색 + 카테고리 필터를 함께 적용합니다.
+     */
+    public List<Product> findByNameContainingAndCategoryId(String name, Long categoryId) {
+        TypedQuery<Product> query = entityManager.createQuery(
+                "SELECT p FROM Product p " +
+                "LEFT JOIN FETCH p.category " +
+                "WHERE LOWER(p.name) LIKE LOWER(:name) " +
+                "AND p.category.id = :categoryId " +
+                "ORDER BY p.id ASC",
+                Product.class
+        );
+        query.setParameter("name", "%" + name + "%");
+        query.setParameter("categoryId", categoryId);
+        return query.getResultList();
+    }
+
+    /**
      * ID로 단일 상품 조회
      *
      * EntityManager.find():

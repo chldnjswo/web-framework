@@ -3,6 +3,7 @@ package kr.ac.hansung.cse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import kr.ac.hansung.cse.config.DbConfig;
+import kr.ac.hansung.cse.model.Category;
 import kr.ac.hansung.cse.model.Product;
 import kr.ac.hansung.cse.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -91,5 +92,30 @@ public class ProductRepositoryTest {
 
         assertFalse(products.isEmpty());
         assertTrue(products.stream().anyMatch(product -> "Test Laptop".equals(product.getName())));
+    }
+
+    @Test
+    @DisplayName("Test6: findByNameContainingAndCategoryId")
+    public void testFindByNameContainingAndCategoryId() {
+        Category electronics = new Category("테스트전자카테고리");
+        Category books = new Category("테스트도서카테고리");
+        em.persist(electronics);
+        em.persist(books);
+
+        Product gamingLaptop = new Product("Gaming Laptop", electronics,
+                new BigDecimal("1999.99"), "Electronics category");
+        Product laptopGuide = new Product("Laptop Guide", books,
+                new BigDecimal("29.99"), "Books category");
+        em.persist(gamingLaptop);
+        em.persist(laptopGuide);
+        em.flush();
+        em.clear();
+
+        List<Product> products = productRepository.findByNameContainingAndCategoryId("Laptop", electronics.getId());
+
+        assertEquals(1, products.size());
+        assertEquals("Gaming Laptop", products.get(0).getName());
+        assertNotNull(products.get(0).getCategory());
+        assertEquals("테스트전자카테고리", products.get(0).getCategory().getName());
     }
 }

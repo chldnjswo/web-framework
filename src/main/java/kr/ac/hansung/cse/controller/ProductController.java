@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import kr.ac.hansung.cse.exception.ProductNotFoundException;
 import kr.ac.hansung.cse.model.Product;
 import kr.ac.hansung.cse.model.ProductForm;
+import kr.ac.hansung.cse.service.CategoryService;
 import kr.ac.hansung.cse.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,9 +38,11 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final CategoryService categoryService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, CategoryService categoryService) {
         this.productService = productService;
+        this.categoryService = categoryService;
     }
 
 
@@ -48,11 +51,18 @@ public class ProductController {
     // ─────────────────────────────────────────────────────────────────
 
     @GetMapping
-    public String listProducts(@RequestParam(name = "name", required = false) String name,
+    public String listProducts(@RequestParam(name = "keyword", required = false) String keyword,
+                               @RequestParam(name = "categoryId", required = false) Long categoryId,
                                Model model) {
-        List<Product> products = productService.searchProductsByName(name);
+        String normalizedKeyword = keyword == null ? "" : keyword.trim();
+        boolean hasSearchCondition = !normalizedKeyword.isEmpty() || categoryId != null;
+        List<Product> products = productService.searchProducts(normalizedKeyword, categoryId);
+
         model.addAttribute("products", products);
-        model.addAttribute("searchName", name == null ? "" : name.trim());
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("keyword", normalizedKeyword);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("hasSearchCondition", hasSearchCondition);
         return "productList";
     }
 

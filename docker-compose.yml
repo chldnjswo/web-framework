@@ -100,6 +100,11 @@ services:
         -Xms256m
         -Dfile.encoding=UTF-8
         -Duser.timezone=Asia/Seoul
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: productdb
+      DB_USERNAME: appuser
+      DB_PASSWORD: apppass
 
 # 데이터 삭제 방법:
 #   rm -rf ./mysql-data    (폴더째 삭제하면 DB 초기화)

@@ -31,6 +31,12 @@ import java.util.Properties;
 })
 public class DbConfig {
 
+    private static final String DEFAULT_DB_HOST = "localhost";
+    private static final String DEFAULT_DB_PORT = "3306";
+    private static final String DEFAULT_DB_NAME = "productdb";
+    private static final String DEFAULT_DB_USERNAME = "appuser";
+    private static final String DEFAULT_DB_PASSWORD = "apppass";
+
     /**
      * DataSource: DB 연결 정보
      * DriverManagerDataSource는 학습용 (운영 환경에서는 HikariCP 등 커넥션 풀 사용)
@@ -39,14 +45,16 @@ public class DbConfig {
     public DataSource dataSource() {
         DriverManagerDataSource ds = new DriverManagerDataSource();
         ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        ds.setUrl("jdbc:mysql://mysql:3306/productdb" +
+        ds.setUrl("jdbc:mysql://" + getConfig("DB_HOST", "db.host", DEFAULT_DB_HOST) +
+                  ":" + getConfig("DB_PORT", "db.port", DEFAULT_DB_PORT) +
+                  "/" + getConfig("DB_NAME", "db.name", DEFAULT_DB_NAME) +
                   "?useSSL=false" +
                   "&allowPublicKeyRetrieval=true" +
                   "&serverTimezone=Asia/Seoul" +
                   "&useUnicode=true" +
                   "&characterEncoding=UTF-8");
-        ds.setUsername("appuser");
-        ds.setPassword("apppass");
+        ds.setUsername(getConfig("DB_USERNAME", "db.username", DEFAULT_DB_USERNAME));
+        ds.setPassword(getConfig("DB_PASSWORD", "db.password", DEFAULT_DB_PASSWORD));
         return ds;
     }
 
@@ -84,5 +92,19 @@ public class DbConfig {
     public PlatformTransactionManager transactionManager(
             EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
+    }
+
+    private String getConfig(String envKey, String propertyKey, String defaultValue) {
+        String propertyValue = System.getProperty(propertyKey);
+        if (propertyValue != null && !propertyValue.isBlank()) {
+            return propertyValue;
+        }
+
+        String envValue = System.getenv(envKey);
+        if (envValue != null && !envValue.isBlank()) {
+            return envValue;
+        }
+
+        return defaultValue;
     }
 }

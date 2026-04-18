@@ -20,8 +20,9 @@
         .btn:hover { background: #357abd; }
         .btn-secondary { background: #6c757d; }
         .btn-secondary:hover { background: #545b62; }
-        .search-form { display: flex; gap: 10px; align-items: center; margin: 4px 0 20px; }
+        .search-form { display: flex; gap: 10px; align-items: center; margin: 4px 0 20px; flex-wrap: wrap; }
         .search-input { flex: 1; max-width: 320px; padding: 9px 12px; border: 1px solid #ccd6e0; border-radius: 4px; font-size: 0.95rem; }
+        .search-select { min-width: 220px; padding: 9px 12px; border: 1px solid #ccd6e0; border-radius: 4px; font-size: 0.95rem; background: white; }
         .search-btn { padding: 9px 16px; border: none; background: #2c3e50; color: white; border-radius: 4px; cursor: pointer; font-size: 0.95rem; }
         .search-btn:hover { background: #1f2d3a; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
@@ -64,14 +65,25 @@
     <form class="search-form" th:action="@{/products}" method="get">
         <input class="search-input"
                type="text"
-               name="name"
-               th:value="${searchName}"
+               name="keyword"
+               th:value="${keyword}"
                placeholder="상품명을 입력하세요">
-        <button class="search-btn" type="submit">이름 검색</button>
+        <select class="search-select" name="categoryId">
+            <option value="">-- 전체 카테고리 --</option>
+            <option th:each="cat : ${categories}"
+                    th:value="${cat.id}"
+                    th:text="${cat.name}"
+                    th:selected="${categoryId != null and cat.id == categoryId}">
+                카테고리명
+            </option>
+        </select>
+        <button class="search-btn" type="submit">검색</button>
     </form>
 
-    <div class="empty-msg" th:if="${#lists.isEmpty(products)}">
-        표시할 상품이 없습니다.
+    <div class="empty-msg"
+         th:if="${#lists.isEmpty(products)}"
+         th:text="${hasSearchCondition} ? '검색 결과가 없습니다.' : '표시할 상품이 없습니다.'">
+        검색 결과가 없습니다.
     </div>
 
     <table th:unless="${#lists.isEmpty(products)}">

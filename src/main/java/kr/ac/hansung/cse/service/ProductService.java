@@ -91,6 +91,36 @@ public class ProductService {
     }
 
     /**
+     * 키워드와 카테고리 조건을 조합해 상품을 조회합니다.
+     * 둘 다 있으면 AND 조건을 적용합니다.
+     */
+    public List<Product> searchProducts(String keyword, Long categoryId) {
+        boolean hasKeyword = keyword != null && !keyword.isBlank();
+        boolean hasCategory = categoryId != null;
+
+        if (hasKeyword && hasCategory) {
+            return productRepository.findByNameContainingAndCategoryId(keyword.trim(), categoryId);
+        }
+        if (hasKeyword) {
+            return productRepository.findByNameContaining(keyword.trim());
+        }
+        if (hasCategory) {
+            return productRepository.findByCategoryId(categoryId);
+        }
+        return productRepository.findAll();
+    }
+
+    /**
+     * 카테고리별 상품 조회
+     */
+    public List<Product> searchProductsByCategory(Long categoryId) {
+        if (categoryId == null) {
+            return productRepository.findAll();
+        }
+        return productRepository.findByCategoryId(categoryId);
+    }
+
+    /**
      * ID로 상품 조회
      * Optional을 그대로 반환하여 Controller가 null 처리를 명시적으로 하도록 강제합니다.
      */

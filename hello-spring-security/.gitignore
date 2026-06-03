@@ -17,6 +17,10 @@ target/
 application-local.properties
 application-secret.properties
 
+# ── 작업 계획 문서 ────────────────────────────────
+*WORK_PLAN.md
+*work_plan.md
+
 # ── OS ───────────────────────────────────────────
 .DS_Store
 Thumbs.db

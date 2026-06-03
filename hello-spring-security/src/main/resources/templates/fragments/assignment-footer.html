@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="assignmentFooter">
+    <style>
+        body { padding-bottom: 72px; }
+        .assignment-footer {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1030;
+            padding: 0.75rem 1rem;
+            background: rgba(15, 52, 96, 0.96);
+            color: #fff;
+            font-size: 0.92rem;
+            text-align: center;
+            box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.14);
+        }
+        .assignment-footer span {
+            display: inline-block;
+            margin: 0 0.35rem;
+            white-space: nowrap;
+        }
+        @media (max-width: 576px) {
+            body { padding-bottom: 104px; }
+            .assignment-footer span {
+                display: block;
+                margin: 0.12rem 0;
+            }
+        }
+    </style>
+    <footer class="assignment-footer">
+        <span>실습 수행 일시: <strong id="assignment-current-time"></strong></span>
+        <span>학번: <strong>본인학번</strong></span>
+        <span>성명: <strong>본인이름</strong></span>
+    </footer>
+    <script>
+        function updateAssignmentTime() {
+            const now = new Date();
+            const days = ['일', '월', '화', '수', '목', '금', '토'];
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const date = String(now.getDate()).padStart(2, '0');
+            const day = days[now.getDay()];
+            const hours = now.getHours();
+            const period = hours >= 12 ? '오후' : '오전';
+            const displayHours = String(hours % 12 || 12).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('assignment-current-time').textContent =
+                `${year}년 ${month}월 ${date}일 (${day}) ${period} ${displayHours}:${minutes}:${seconds}`;
+        }
+
+        updateAssignmentTime();
+        setInterval(updateAssignmentTime, 1000);
+    </script>
+</div>
+</body>
+</html>

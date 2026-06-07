@@ -19,6 +19,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class ProductController {
 
+    private static final int DEFAULT_PAGE_SIZE = 5;
+
     private final ProductService productService;
 
     @GetMapping
@@ -26,14 +28,12 @@ public class ProductController {
                        @RequestParam(defaultValue = "0") int page,
                        @RequestParam(defaultValue = "5") int size,
                        Model model) {
-        int normalizedPage = Math.max(page, 0);
-        int normalizedSize = size > 0 ? size : 5;
-        String normalizedKeyword = (keyword != null && !keyword.isBlank()) ? keyword.trim() : null;
         PageRequest pageRequest = PageRequest.of(
-            normalizedPage,
-            normalizedSize,
+            normalizePage(page),
+            normalizeSize(size),
             Sort.by("id").ascending()
         );
+        String normalizedKeyword = normalizeKeyword(keyword);
 
         Page<Product> productPage = normalizedKeyword != null
             ? productService.searchProducts(normalizedKeyword, pageRequest)
@@ -65,13 +65,8 @@ public class ProductController {
     @GetMapping("/{id}/edit")
     public String editProductForm(@PathVariable Long id, Model model) {
         Product product = productService.findById(id);
-        ProductDto dto = new ProductDto();
-        dto.setName(product.getName());
-        dto.setPrice(product.getPrice());
-        dto.setDescription(product.getDescription());
-        dto.setStock(product.getStock());
 
-        model.addAttribute("productDto", dto);
+        model.addAttribute("productDto", toProductDto(product));
         model.addAttribute("productId", id);
         return "products/edit";
     }
@@ -96,5 +91,26 @@ public class ProductController {
     public String delete(@PathVariable Long id) {
         productService.deleteById(id);
         return "redirect:/products";
+    }
+
+    private int normalizePage(int page) {
+        return Math.max(page, 0);
+    }
+
+    private int normalizeSize(int size) {
+        return size > 0 ? size : DEFAULT_PAGE_SIZE;
+    }
+
+    private String normalizeKeyword(String keyword) {
+        return keyword != null && !keyword.isBlank() ? keyword.trim() : null;
+    }
+
+    private ProductDto toProductDto(Product product) {
+        ProductDto dto = new ProductDto();
+        dto.setName(product.getName());
+        dto.setPrice(product.getPrice());
+        dto.setDescription(product.getDescription());
+        dto.setStock(product.getStock());
+        return dto;
     }
 }
